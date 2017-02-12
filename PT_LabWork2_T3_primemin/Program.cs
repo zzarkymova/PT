@@ -38,7 +38,7 @@ namespace PT_LabWork2_T3_primemin
                         res = x;
                     }
                 }
-                sw.Write(res);
+                sw.Write(res);    // write result to the text file
                 sw.Close();
                 fsWrite.Close();
 
