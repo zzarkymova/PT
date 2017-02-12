@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace PT_LabWork2_T3_primemin
+namespace PT_LabWork2_T3_primemin 
 {
     class Program
     {
@@ -15,6 +15,7 @@ namespace PT_LabWork2_T3_primemin
             StreamReader sr = new StreamReader(fsRead);
             FileStream fsWrite = new FileStream(@"C:\visual.files\output.txt", FileMode.OpenOrCreate, FileAccess.Write);  //outpu data should be written to this file 
             StreamWriter sw = new StreamWriter(fsWrite);
+
             string txt = sr.ReadToEnd();     // read input data
             sr.Close(); 
             fsRead.Close();   // close the file
