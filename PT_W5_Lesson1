@@ -1,0 +1,65 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Xml.Serialization;
+
+
+namespace PT_W5_G2
+{
+    class Program
+    {
+        class Complex
+        {
+            int a; 
+            int b;  
+            public Complex(int a, int b)
+            {
+                this.a = a;
+                this.b = b;
+            }
+            public static Complex operator +(Complex a1, Complex b2)      
+            {
+                Complex result = new Complex(0, 0);
+                result.a = a1.a + b2.a;
+                result.b = a1.b + b2.b;
+                return result;
+            }
+            public override string ToString()   
+            {
+                return string.Format("{0} + {1}i", a, b);  
+            }
+        }
+            static void Main(string[] args)
+            {
+                Complex a = new Complex(4, 1);     
+                Console.WriteLine(a);
+                Console.ReadKey();
+
+
+                //serializing with json
+                JsonSerializer js = new JsonSerializer();
+                string res = JsonConvert.SerializeObject(a);
+                FileStream fs = new FileStream("student.json", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                StreamWriter sw = new StreamWriter(fs);
+
+                sw.WriteLine(res);
+
+                sw.Close();
+                fs.Close();
+
+
+
+                //serializing with xml
+        /*        FileStream fs = new FileStream("student23.xml", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+ 
+                XmlSerializer xs = new XmlSerializer(typeof (string));
+
+                xs.Serialize(fs, a);
+                fs.Close();*/
+            }
+    }
+}
