@@ -1,0 +1,107 @@
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace FAR
+{
+    class Program
+    {
+        class CustomFolderInfo
+        {
+            CustomFolderInfo prev;    //create values in which prev is info about parent folder
+            int index;     //index of a file (folder) in a list
+            DirectoryInfo[] dirs;   // list of folders
+
+            public CustomFolderInfo(CustomFolderInfo prev, int index, DirectoryInfo[] directoryInfo)  // transmits 3 values: the info of the current folder, index, and list of files
+            {
+                this.prev = prev;
+                this.index = index;
+                this.dirs = directoryInfo;
+            }
+            public void PrintFolderInfo()    //method which prints folder information
+            {
+                Console.Clear();   //clear the window (console)
+
+                for (int i = 0; i < dirs.Length; ++i)    //run through the list
+                {
+                    if (i == index)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;   //if indexes the same, make red that folder
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.White;    // or leave the same other folders
+                    }
+                    Console.WriteLine(dirs[i]);   // print out the list of directories
+                }
+            }
+
+            public void DecreaseIndex()   // if we climb up the list
+            {
+                if (index - 1 >= 0) index--;   // if the index isn't 1. we can decrease the index
+           
+            }
+
+            public void IncreaseIndex()     // if we climb down the list
+            {
+                if (index + 1 < dirs.Length) index++;      // if the index doesn't show us the last element
+            }
+
+            public CustomFolderInfo GetNextItem()    // when we press enter, we should take info about that item
+            {
+                return new CustomFolderInfo(this, 0, this.dirs[index].GetDirectories());    
+            }
+
+            public CustomFolderInfo GetPrevItem()   // when we press esc, we should take info about previous item
+            {
+                return prev;
+            }
+        }
+
+        static void ShowFolderInfo(CustomFolderInfo item)   // method in which the folder containin shows
+        {
+            item.PrintFolderInfo();
+
+            ConsoleKeyInfo pressedKey = Console.ReadKey();
+
+            if (pressedKey.Key == ConsoleKey.UpArrow)   // if it is uparrow, decrease index fuction will be called
+            {
+                item.DecreaseIndex();
+                ShowFolderInfo(item);
+            }
+            else if (pressedKey.Key == ConsoleKey.DownArrow)   // if it is doenarrow, increase index fuction will be called
+            {
+                item.IncreaseIndex();
+                ShowFolderInfo(item);
+            }
+            else if (pressedKey.Key == ConsoleKey.Enter)    // if the key is enter, function will be called
+            {
+                CustomFolderInfo newItem = item.GetNextItem();
+                ShowFolderInfo(newItem);
+            }
+            else if (pressedKey.Key == ConsoleKey.Escape)    // if the key is esc, function will be called
+            {
+                CustomFolderInfo newItem = item.GetPrevItem();
+                ShowFolderInfo(newItem);
+            }
+        }
+
+        static void Main(string[] args)
+        {
+            CustomFolderInfo test = new CustomFolderInfo(null, 0, new DirectoryInfo(@"C:\").GetDirectories());
+            Console.CursorVisible = false;
+            ShowFolderInfo(test);
+
+            DirectoryInfo dr = new DirectoryInfo("C:\\visual.files"); 
+            FileSystemInfo[] list = dr.GetFileSystemInfos(); 
+
+            for (int i = 0; i < list.Length; i++) 
+            Console.WriteLine(list[i]); 
+            Console.ReadKey(); 
+        }
+    }
+}
+
