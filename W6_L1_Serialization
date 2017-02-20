@@ -1,0 +1,92 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.IO;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using System.Xml.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+
+
+namespace PT_W5_G2
+{
+    public class Complex
+    {
+        public int a;
+        public int b;
+        public Complex()
+        {
+
+        }
+        public Complex(int a, int b)
+        {
+            this.a = a;
+            this.b = b;
+        }
+        public static Complex operator +(Complex a1, Complex b2)
+        {
+            Complex result = new Complex(0, 0);
+            result.a = a1.a + b2.a;
+            result.b = a1.b + b2.b;
+            return result;
+        }
+        public override string ToString()
+        {
+            return string.Format("{0} + {1}i", a, b);
+        }
+    }
+    
+
+    class Program
+    {
+        private const string filename = "comolex.dat";
+            static void Main(string[] args)
+            {
+                Complex a = new Complex(4, 1);     
+                Console.WriteLine(a);
+
+
+
+                //serializing with json
+       /*         JsonSerializer js = new JsonSerializer();
+                string res = JsonConvert.SerializeObject(a);
+                FileStream fs = new FileStream("student.json", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                StreamWriter sw = new StreamWriter(fs);
+
+                sw.WriteLine(res);
+
+                sw.Close();
+                fs.Close();  */
+
+
+                //serializing with xml
+/*                FileStream fs = new FileStream("students.xml", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+                 XmlSerializer xs = new XmlSerializer(typeof (Complex));
+                xs.Serialize(fs, a);
+                fs.Close();
+                //deserialization xml
+                FileStream fs2 = new FileStream("students.xml", FileMode.Open, FileAccess.Read);
+                Complex s2 = xs.Deserialize(fs2) as Complex;
+                Console.WriteLine(a);
+                fs2.Close();
+                */
+
+
+                FileStream fss = File.Create(filename);
+                var formatter = new BinaryFormatter();
+                Console.WriteLine("serializing ");
+                formatter.Serialize(fss, a);
+                fss.Close();
+
+                fss = File.OpenRead(filename);
+                Console.WriteLine("Deserializing");
+                var v = (Complex)formatter.Deserialize(fss);
+                fss.Close();
+
+                Console.WriteLine();
+                Console.Read();
+
+            }
+    }
+}
